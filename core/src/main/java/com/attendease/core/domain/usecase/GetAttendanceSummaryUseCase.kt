@@ -7,7 +7,9 @@ import com.attendease.core.domain.repository.SubjectRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 
-class GetAttendanceSummaryUseCase(
+import javax.inject.Inject
+
+class GetAttendanceSummaryUseCase @Inject constructor(
     private val subjectRepository: SubjectRepository,
     private val attendanceRepository: AttendanceRepository
 ) {

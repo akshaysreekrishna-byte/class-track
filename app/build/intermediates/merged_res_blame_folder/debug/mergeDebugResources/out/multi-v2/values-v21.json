@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.attendease.app-mergeDebugResources-53:/values-v21/values-v21.xml",
+            "outputFile": "com.attendease.app-mergeDebugResources-63:/values-v21/values-v21.xml",
             "map": [
                 {
-                    "source": "/Users/Home/.gradle/caches/transforms-4/0448cb080875245fc0bd00b9a0da26f5/transformed/core-1.13.1/res/values-v21/values-v21.xml",
+                    "source": "/Users/Home/.gradle/caches/transforms-4/d9c6c6f7106ffbf31842ce029a9deebf/transformed/core-1.13.1/res/values-v21/values-v21.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,13",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4",
