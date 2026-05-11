@@ -37,20 +37,40 @@ The app follows strict **Clean Architecture** principles as defined in [AGENTS.m
 
 ## 📈 Development Roadmap
 
-### Phase 1: Core Logic (Current)
-- [ ] Define Domain Entities (`Subject`, `AttendanceRecord`, `Holiday`).
-- [ ] Implement `BunkCalculator` with 100% unit test coverage.
-- [ ] Create Repository Interfaces.
-- [ ] Implement Data Layer (Room DAOs and Entities).
+### Phase 1: Domain Foundation (Logic-First)
+- [ ] Define core Domain Entities (`Subject`, `AttendanceRecord`, `GeofenceConfig`).
+- [ ] Implement `BunkCalculator` logic with 100% Unit Test coverage.
+- [ ] Create abstract Repository Interfaces for data decoupling.
+- [ ] Define Use Case interactor classes for core business flows.
 
-### Phase 2: Background Services
-- [ ] Implement `GeofenceCheckWorker`.
-- [ ] Setup WorkManager scheduling.
+### Phase 2: Data Persistence & Infrastructure
+- [ ] Setup Room Database schemas and Type Converters.
+- [ ] Implement Room DAOs for all core entities.
+- [ ] Complete Repository implementations in the Data Layer.
+- [ ] Implement Data Mappers (Entity <-> DTO) and integration tests.
 
-### Phase 3: UI Implementation
-- [ ] Dashboard Screen (KPIs & Bunk Safety).
-- [ ] Calendar & Timetable View.
-- [ ] Subject Management UI.
+### Phase 3: Background Intelligence (Geofencing)
+- [ ] Implement AOSP-compliant `LocationProvider` logic.
+- [ ] Develop `GeofenceCheckWorker` using Jetpack WorkManager.
+- [ ] Setup periodic scheduling for background attendance detection.
+- [ ] Implement local notification system for "Auto-Marked" events.
+
+### Phase 4: Core UI & Navigation Foundation
+- [ ] Establish Material 3 Design System (Colors, Typography, Shapes).
+- [ ] Setup Hilt-integrated Navigation Graph.
+- [ ] Implement Subject Management UI (CRUD operations).
+- [ ] Build reusable UI components (Attendance cards, status chips).
+
+### Phase 5: Analytics Dashboard & Visuals
+- [ ] Create "Bunk Safety" Dashboard with dynamic KPI cards.
+- [ ] Implement Semantic Timetable Grid (4-color status tracking).
+- [ ] Build History/Calendar View for long-term attendance auditing.
+- [ ] Integrate interactive charts for subject-wise performance.
+
+### Phase 6: Refinement & Privacy Features
+- [ ] Implement local backup/restore (JSON/CSV export).
+- [ ] Optimize background battery consumption for geofencing.
+- [ ] Final UI Polish, animations (Framer-motion style), and dark mode.
 
 ## 🚀 Building the Project
 
