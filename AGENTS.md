@@ -1,5 +1,5 @@
-# AGENTS.md — AttendEase Project Rulebook
-> **Version:** 1.1.0 | **Status:** Authoritative Source of Truth
+# AGENTS.md — class-track Project Rulebook
+> **Version:** 1.2.0 | **Status:** Authoritative Source of Truth
 > **Scope:** Every AI agent, contributor, or automated tool working on this codebase MUST treat this document as law. No exceptions without an explicit, versioned amendment to this file.
 
 ---
@@ -21,21 +21,33 @@
 
 ## 1. Project Identity
 
-| Field          | Value                                                                 |
-|----------------|-----------------------------------------------------------------------|
-| **App Name**   | class tracker                                                         |
-| **Purpose**    | Student attendance management with bunk calculation and geofencing    |
-| **Philosophy** | FOSS-first, Privacy-by-design, Local-first                           |
-| **License**    | GPL-3.0 (all contributions must be compatible)                       |
-| **Min SDK**    | API 26 (Android 8.0)                                                 |
-| **Target SDK** | Latest stable Android SDK                                             |
+| Field          | Value                                                                               |
+|----------------|-------------------------------------------------------------------------------------|
+| **App Name**   | class-track                                                                         |
+| **Repository** | `class-track` (package namespace: `com.classtrack`)                                 |
+| **Purpose**    | University student attendance management — bunk safety analytics + background geofenced marking |
+| **Philosophy** | FOSS-First, Privacy-by-Default, Local-First, **Logic-First**                       |
+| **License**    | GPL-3.0 (all contributions must be compatible)                                      |
+| **Min SDK**    | API 26 (Android 8.0)                                                                |
+| **Target SDK** | Latest stable Android SDK                                                           |
 
 ### 1.1 Non-Negotiable Project Principles
 
 - **P-1 FOSS First:** No proprietary SDK, library, or service may be introduced without a formal amendment to this rulebook.
-- **P-2 Privacy by Default:** No user data leaves the device unless explicitly initiated by the user (e.g., manual export).
+- **P-2 Privacy by Default:** Zero user tracking, zero external analytics, zero external cloud databases. No user data leaves the device unless explicitly initiated by the user (e.g., manual export).
 - **P-3 Local First:** All business logic, calculations, and state live on-device. The app must be fully functional with no network connection.
 - **P-4 Offline Capable:** Every core feature (marking attendance, viewing calendar, bunk calculation) must work in airplane mode.
+- **P-5 Logic First:** ⚠️ **This is the active guiding principle for the current rebuild.** The Domain and Data layers are built and fully tested *before* any UI work begins. No Composable, ViewModel, or navigation code may be merged until the Domain layer it depends on has passing unit tests. This prevents the failure mode of building UI around untested logic.
+
+### 1.2 Development Phases
+
+The project follows a strict, phase-gated build order. Agents must not work on a later phase until the current phase's exit criteria are met.
+
+| Phase | Name | Scope | Exit Criteria |
+|-------|------|-------|---------------|
+| **Phase 1** ← *Current* | Core Logic | Domain entities, `BunkCalculator`, Repository interfaces, Room DAOs & entities, Mappers, Repository implementations | `./gradlew testDebugUnitTest` passes with ≥ 90% Domain coverage and ≥ 80% Data coverage |
+| **Phase 2** | Background Services | `GeofenceCheckWorker`, WorkManager scheduling, `LocationManager` integration | Worker is idempotent under test; no UI changes merged |
+| **Phase 3** | UI Implementation | Dashboard, Calendar & Timetable, Subject Management, Navigation shell | All Phase 1 & 2 tests still passing; Compose UI tests cover key flows |
 
 ---
 
@@ -293,7 +305,7 @@ class BadViewModel : ViewModel() {
 
 ### 4.1 The Three-Screen Architecture
 
-AttendEase has exactly **three primary screens**. Every feature module maps 1-to-1 with a screen.
+class-track has exactly **three primary screens**. Every feature module maps 1-to-1 with a screen.
 
 | Screen | Feature Module | Role |
 |--------|---------------|------|
@@ -304,7 +316,7 @@ AttendEase has exactly **three primary screens**. Every feature module maps 1-to
 ### 4.2 Full Directory Tree
 
 ```
-com.attendease/
+com.classtrack/
 │
 ├── core/
 │   │
@@ -445,6 +457,9 @@ class DashboardViewModel : ViewModel() {
 **Rule S-4 — Navigation is Owned by the App Shell.**
 The `NavHost`, bottom navigation bar, and route definitions live in the app-level shell (e.g., `MainActivity` / `AppNavigation.kt`), not inside any feature module.
 
+**Rule S-5 — Logic-First Build Gate. (NEW in v1.2.0)**
+`feature/` directories must remain empty scaffolding (no business logic, no ViewModel implementations) until Phase 1 exit criteria are met (see §1.2). An AI agent asked to implement a screen MUST first verify that all Use Cases and Repository interfaces that screen depends on exist in `core/domain/` with passing tests. If they do not exist, the agent must implement and test those first, then surface a clear note before proceeding to UI code.
+
 ### 4.4 Naming Conventions for Files
 
 | Type | Pattern | Example |
@@ -488,7 +503,7 @@ The following are **permanently and unconditionally FORBIDDEN**:
 
 ```kotlin
 // ✅ CORRECT — Timber planted only in debug builds.
-class AttendEaseApp : Application() {
+class ClassTrackApp : Application() {
     override fun onCreate() {
         super.onCreate()
         if (BuildConfig.DEBUG) {
@@ -767,7 +782,7 @@ const val GEOFENCE_CHECK_INTERVAL_MINUTES = 15L
 
 // WorkManager tags
 const val GEOFENCE_WORKER_TAG = "geofence_check_worker"
-const val GEOFENCE_UNIQUE_WORK_NAME = "attendease_geofence_periodic"
+const val GEOFENCE_UNIQUE_WORK_NAME = "classtrack_geofence_periodic"
 
 // Scheduling (call from Settings when user enables geofencing)
 WorkManager.getInstance(context).enqueueUniquePeriodicWork(
@@ -894,7 +909,7 @@ fun CalendarDayCell(
 | Functions | `camelCase` | `calculateSafeBunks()`, `getSubjects()` |
 | Variables | `camelCase` | `currentPercentage`, `isManualOverride` |
 | Constants | `UPPER_SNAKE_CASE` | `GEOFENCE_CHECK_INTERVAL_MINUTES` |
-| Packages | `lowercase.dotted` | `com.attendease.feature.bunk` |
+| Packages | `lowercase.dotted` | `com.classtrack.feature.bunk` |
 | Composable functions | `PascalCase` | `CalendarDayCell`, `BunkResultCard` |
 | Boolean properties | `is` / `has` / `can` prefix | `isLoading`, `hasError`, `canBunkMore` |
 
@@ -1123,7 +1138,7 @@ When an AI agent (Copilot, Claude, Cursor, etc.) generates code for this project
 
 ---
 
-*This document is the authoritative source of truth for the AttendEase project. All rules herein supersede any conflicting convention, library default, or AI agent suggestion. To propose an amendment, open a GitHub Discussion tagged `rulebook-amendment`.*
+*This document is the authoritative source of truth for the class-track project. All rules herein supersede any conflicting convention, library default, or AI agent suggestion. To propose an amendment, open a GitHub Discussion tagged `rulebook-amendment`.*
 
 ---
-**AGENTS.md** | AttendEase | GPL-3.0 | Last updated: 2026-05-02
+**AGENTS.md** | class-track | GPL-3.0 | Last updated: 2026-05-02

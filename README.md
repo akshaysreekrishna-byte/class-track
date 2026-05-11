@@ -1,6 +1,9 @@
-# AttendEase (Class Tracker)
+# class-track
 
-AttendEase is an open-source, privacy-focused, offline-first Android application designed to help university students manage their class attendance with precision. It features advanced "bunk safety" analytics and fully local, background geofenced attendance marking.
+class-track is an open-source, privacy-focused, offline-first Android application designed to help university students manage their class attendance with precision. It features advanced "bunk safety" analytics and fully local, background geofenced attendance marking.
+
+> [!IMPORTANT]
+> **Project Status:** This project is currently being rebuilt with a **Logic-First** approach. We are prioritizing the Domain and Data layers to ensure a robust foundation before implementing the UI.
 
 ## 🛡️ Philosophy
 
@@ -11,26 +14,43 @@ AttendEase is an open-source, privacy-focused, offline-first Android application
 ## ✨ Features
 
 - **Predictive Bunk Analytics**: Accurately calculates "Safe Bunks Remaining" and "Classes Needed to Recover" based on subject weightages (Theory vs. Lab).
-- **Background Geofencing**: Automatically detects when you are inside a designated class area for more than 5 minutes and marks you as `PRESENT` automatically. Utilizes pure AOSP `LocationManager` and `WorkManager` (No Play Services).
-- **Subject Management**: Configure subjects, specify whether they are Lab or Theory modules, and configure custom geofence radii for each location.
-- **Visual Timetable & Calendar**: Track daily classes through a 4-color semantic grid (Present, Absent, Cancelled, Pending).
+- **Background Geofencing**: Automatically detects when you are inside a designated class area and marks you as `PRESENT`. Utilizes pure AOSP `LocationManager` and `WorkManager`.
+- **Subject Management**: Configure subjects, specify whether they are Lab or Theory modules, and configure custom geofence radii.
+- **Visual Timetable & Calendar**: Track daily classes through a 4-color semantic grid (Present, Absent, Cancelled, Holiday).
+
+## 🏗️ Architecture Design
+
+The app follows strict **Clean Architecture** principles as defined in [AGENTS.md](file:///Users/Home/projects/Attendancetracker/class-track/AGENTS.md):
+
+1. **Domain Layer (`core/domain`)**: Pure Kotlin logic. Houses entities, use cases, and the `BunkCalculator`. Zero Android framework imports.
+2. **Data Layer (`core/data`)**: Room implementations, Repositories, and Mappers. Handles all persistence logic.
+3. **UI Layer (`feature/*`)**: Jetpack Compose screens consuming `StateFlow` from ViewModels. (Currently in planning).
 
 ## 🛠️ Technology Stack
 
-- **Language**: Kotlin 2.0
-- **UI Toolkit**: Jetpack Compose & Material Design 3 (Material You)
-- **Architecture**: Clean Architecture (Domain, Data, UI Layers) with Unidirectional Data Flow (UDF)
+- **Language**: Kotlin 2.0+ (Coroutines + Flow)
+- **UI Toolkit**: Jetpack Compose & Material Design 3
 - **Dependency Injection**: Dagger Hilt
 - **Database**: Room Persistence Library
 - **Background Processing**: Jetpack WorkManager
 - **Maps & Geofencing**: OSMDroid (OpenStreetMap)
 
-## 🏗️ Architecture Design
+## 📈 Development Roadmap
 
-The app is built using strict Clean Architecture rules:
-1. **Domain Layer (`:core:domain`)**: Pure Kotlin logic. Houses entities, use cases, and `BunkCalculator`. Absolutely zero Android framework imports.
-2. **Data Layer (`:core:data`)**: Implements Repositories via Room DAOs. Data is heavily safeguarded using `Result<T>` monad wrappers to prevent UI crashes.
-3. **UI Layer (`:feature:xyz`)**: Jetpack Compose screens consuming single `StateFlow` streams from feature-specific ViewModels.
+### Phase 1: Core Logic (Current)
+- [ ] Define Domain Entities (`Subject`, `AttendanceRecord`, `Holiday`).
+- [ ] Implement `BunkCalculator` with 100% unit test coverage.
+- [ ] Create Repository Interfaces.
+- [ ] Implement Data Layer (Room DAOs and Entities).
+
+### Phase 2: Background Services
+- [ ] Implement `GeofenceCheckWorker`.
+- [ ] Setup WorkManager scheduling.
+
+### Phase 3: UI Implementation
+- [ ] Dashboard Screen (KPIs & Bunk Safety).
+- [ ] Calendar & Timetable View.
+- [ ] Subject Management UI.
 
 ## 🚀 Building the Project
 
