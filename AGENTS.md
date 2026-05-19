@@ -179,3 +179,36 @@ These limits exist to enforce maintainability. If a file approaches its limit, t
 - **Repository implementation is too large**: the repository likely handles too many entity types — split by domain concern.
 - **Mapper is too large**: likely mapping too many fields with complex transformations — introduce intermediate value objects or split into focused mappers.
 - **Never increase a limit to accommodate growing code.** Decompose instead.
+
+---
+
+## 8. Worktree Workflow
+
+All code changes must be implemented inside a dedicated Git worktree. This isolates in-progress work from the main checkout and keeps the repo state clean.
+
+### 8.1 Always Create Worktrees Manually
+- Create every worktree at `~/class-track-worktrees/<branch-name>/` — outside the main repository directory.
+- **Never** create a worktree inside the project directory (e.g. `.claude/worktrees/` or any subdirectory of the repo). The Metro bundler watches the entire project tree and will break if a nested worktree is present.
+
+```bash
+# Correct — worktree lives outside the repo
+git worktree add ~/class-track-worktrees/<branch-name> -b <branch-name>
+cd ~/class-track-worktrees/<branch-name>
+```
+
+### 8.2 Never Use `isolation: "worktree"` When Launching Agents
+- The built-in Claude agent harness creates worktrees inside `.claude/worktrees/` (inside the repo), which violates rule 8.1.
+- **Never** pass `isolation: "worktree"` when spawning an Agent.
+- Instead: create the worktree manually first (per 8.1), `cd` into it, and then launch the Agent from that directory — or launch the Agent without an isolation flag and let it operate in the already-checked-out worktree.
+
+### 8.3 One Worktree Per Branch
+- Each feature branch or task gets its own worktree directory. Do not reuse a worktree across unrelated branches.
+- When work is merged and the branch is deleted, remove the worktree:
+
+```bash
+git worktree remove ~/class-track-worktrees/<branch-name>
+```
+
+### 8.4 Worktree Naming
+- Name worktrees after their branch: `~/class-track-worktrees/feature-attendance-ui/`, `~/class-track-worktrees/fix-bunk-calculator/`, etc.
+- Branch names follow kebab-case: `<type>-<short-description>` (e.g. `feature-subject-list`, `fix-mapper-null-crash`, `refactor-domain-entities`).
