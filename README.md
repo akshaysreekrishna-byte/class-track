@@ -39,10 +39,10 @@ The app follows strict **Clean Architecture** principles as defined in [AGENTS.m
 
 ### Phase 1: Project Setup & Domain Foundation
 - [x] Initialize Android project structure and `libs.versions.toml` (Version Catalog).
-- [ ] Define core Domain Entities (`Subject`, `AttendanceRecord`, `GeofenceConfig`).
-- [ ] Implement `BunkCalculator` logic with 100% Unit Test coverage.
-- [ ] Create abstract Repository Interfaces for data decoupling.
-- [ ] Define Use Case interactor classes for core business flows.
+- [x] Define core Domain Entities (`Subject`, `AttendanceRecord`, `GeofenceConfig`).
+- [x] Implement `BunkCalculator` logic with 100% Unit Test coverage.
+- [x] Create abstract Repository Interfaces for data decoupling.
+- [x] Define Use Case interactor classes for core business flows.
 
 ### Phase 2: Data Persistence & Infrastructure
 - [ ] Setup Room Database schemas and Type Converters.
