@@ -5,10 +5,12 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.classtrack.core.data.local.dao.AcademicTermDao
 import com.classtrack.core.data.local.dao.AttendanceRecordDao
+import com.classtrack.core.data.local.dao.HolidayDao
 import com.classtrack.core.data.local.dao.ScheduleSlotDao
 import com.classtrack.core.data.local.dao.SubjectDao
 import com.classtrack.core.data.local.entity.AcademicTermEntity
 import com.classtrack.core.data.local.entity.AttendanceRecordEntity
+import com.classtrack.core.data.local.entity.HolidayEntity
 import com.classtrack.core.data.local.entity.ScheduleSlotEntity
 import com.classtrack.core.data.local.entity.SubjectEntity
 
@@ -17,9 +19,10 @@ import com.classtrack.core.data.local.entity.SubjectEntity
         AcademicTermEntity::class,
         SubjectEntity::class,
         ScheduleSlotEntity::class,
-        AttendanceRecordEntity::class
+        AttendanceRecordEntity::class,
+        HolidayEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = true
 )
 @TypeConverters(Converters::class)
@@ -28,4 +31,5 @@ abstract class ClassTrackDatabase : RoomDatabase() {
     abstract val subjectDao: SubjectDao
     abstract val scheduleSlotDao: ScheduleSlotDao
     abstract val attendanceRecordDao: AttendanceRecordDao
+    abstract val holidayDao: HolidayDao
 }
