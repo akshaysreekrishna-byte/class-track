@@ -38,17 +38,17 @@ The app follows strict **Clean Architecture** principles as defined in [AGENTS.m
 ## 📈 Development Roadmap
 
 ### Phase 1: Project Setup & Domain Foundation
-- [ ] Initialize Android project structure and `libs.versions.toml` (Version Catalog).
-- [ ] Define core Domain Entities (`Subject`, `AttendanceRecord`, `GeofenceConfig`).
-- [ ] Implement `BunkCalculator` logic with 100% Unit Test coverage.
-- [ ] Create abstract Repository Interfaces for data decoupling.
-- [ ] Define Use Case interactor classes for core business flows.
+- [x] Initialize Android project structure and `libs.versions.toml` (Version Catalog).
+- [x] Define core Domain Entities (`Subject`, `AttendanceRecord`, `GeofenceConfig`).
+- [x] Implement `BunkCalculator` logic with 100% Unit Test coverage.
+- [x] Create abstract Repository Interfaces for data decoupling.
+- [x] Define Use Case interactor classes for core business flows.
 
 ### Phase 2: Data Persistence & Infrastructure
-- [ ] Setup Room Database schemas and Type Converters.
-- [ ] Implement Room DAOs for all core entities.
-- [ ] Complete Repository implementations in the Data Layer.
-- [ ] Implement Data Mappers (Entity <-> DTO) and integration tests.
+- [x] Setup Room Database schemas and Type Converters.
+- [x] Implement Room DAOs for all core entities.
+- [x] Complete Repository implementations in the Data Layer.
+- [x] Implement Data Mappers (Entity <-> DTO) and integration tests.
 
 ### Phase 3: Background Intelligence (Geofencing)
 - [ ] Implement AOSP-compliant `LocationProvider` logic.
