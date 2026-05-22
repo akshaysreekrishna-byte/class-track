@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.classtrack.core.domain.usecase.CheckGeofenceUseCaseTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-05-22T13:02:07.608Z" hostname="Akshays-MacBook-Air.local" time="0.029">
+  <properties/>
+  <testcase name="given_coordinatesFarAway_when_checked_then_returnsFalse()" classname="com.classtrack.core.domain.usecase.CheckGeofenceUseCaseTest" time="0.011"/>
+  <testcase name="given_antipodalCoordinates_when_checked_then_returnsFalse()" classname="com.classtrack.core.domain.usecase.CheckGeofenceUseCaseTest" time="0.001"/>
+  <testcase name="given_largeRadius_when_coordinatesFarAway_then_returnsTrue()" classname="com.classtrack.core.domain.usecase.CheckGeofenceUseCaseTest" time="0.001"/>
+  <testcase name="given_coordinatesJustInsideRadius_when_checked_then_returnsTrue()" classname="com.classtrack.core.domain.usecase.CheckGeofenceUseCaseTest" time="0.001"/>
+  <testcase name="given_zeroRadiusConfig_when_coordinatesOffset_then_returnsFalse()" classname="com.classtrack.core.domain.usecase.CheckGeofenceUseCaseTest" time="0.001"/>
+  <testcase name="given_coordinatesJustOutsideRadius_when_checked_then_returnsFalse()" classname="com.classtrack.core.domain.usecase.CheckGeofenceUseCaseTest" time="0.001"/>
+  <testcase name="given_zeroRadiusConfig_when_coordinatesAtExactCenter_then_returnsTrue()" classname="com.classtrack.core.domain.usecase.CheckGeofenceUseCaseTest" time="0.0"/>
+  <testcase name="given_coordinatesAtExactCenter_when_checked_then_returnsTrue()" classname="com.classtrack.core.domain.usecase.CheckGeofenceUseCaseTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
