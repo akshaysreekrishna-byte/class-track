@@ -22,6 +22,15 @@ class ScheduleSlotRepositoryImpl(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
+    override fun getSlotsForDayInCurrentTerm(dayOfWeek: Int): Flow<List<ScheduleSlot>> {
+        return academicTermDao.getCurrentTerm()
+            .filterNotNull()
+            .flatMapLatest { activeTerm ->
+                scheduleSlotDao.getSlotsForDayInTerm(dayOfWeek, activeTerm.id)
+            }.map { list -> list.map { it.toDomain() } }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun getSlotsWithSubjectsForDay(dayOfWeek: Int): Flow<List<Pair<ScheduleSlot, Subject>>> {
         return academicTermDao.getCurrentTerm()
             .filterNotNull()
