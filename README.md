@@ -3,7 +3,7 @@
 class-track is an open-source, privacy-focused, offline-first Android application designed to help university students manage their class attendance with precision. It features advanced "bunk safety" analytics and fully local, background geofenced attendance marking.
 
 > [!IMPORTANT]
-> **Project Status:** Phases 1–3 are complete. The Domain, Data, and Background Intelligence layers are fully implemented and tested. Development is now moving to **Phase 4: Core UI & Navigation Foundation**.
+> **Project Status:** Phases 1–4 are complete. The Domain, Data, Background Intelligence layers, and Core UI Foundation are fully implemented. Development is now moving to **Phase 5: Analytics Dashboard & Visuals**.
 
 ## 🛡️ Philosophy
 
@@ -57,10 +57,10 @@ The app follows strict **Clean Architecture** principles as defined in [AGENTS.m
 - [x] Implement local notification system for "Auto-Marked" events.
 
 ### Phase 4: Core UI & Navigation Foundation
-- [ ] Establish Material 3 Design System (Colors, Typography, Shapes).
-- [ ] Setup Hilt-integrated Navigation Graph.
-- [ ] Implement Subject Management UI (CRUD operations).
-- [ ] Build reusable UI components (Attendance cards, status chips).
+- [x] Establish Material 3 Design System (Colors, Typography, Shapes).
+- [x] Setup Hilt-integrated Navigation Graph.
+- [x] Implement Subject Management UI (CRUD operations).
+- [x] Build reusable UI components (Attendance cards, status chips).
 
 ### Phase 5: Analytics Dashboard & Visuals
 - [ ] Create "Bunk Safety" Dashboard with dynamic KPI cards.
