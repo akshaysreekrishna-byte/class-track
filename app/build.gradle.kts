@@ -66,14 +66,23 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation("androidx.compose.material:material-icons-extended")
+
+    // Navigation Compose
+    implementation(libs.navigation.compose)
+
+    // Lifecycle / ViewModel Compose
+    implementation(libs.lifecycle.viewmodel.compose)
 
     // Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
 
+    // Hilt Navigation Compose
+    implementation(libs.hilt.navigation.compose)
+
     // Hilt WorkManager integration
     implementation(libs.hilt.work)
-    ksp(libs.hilt.compiler)
 
     // WorkManager
     implementation(libs.androidx.work.runtime.ktx)

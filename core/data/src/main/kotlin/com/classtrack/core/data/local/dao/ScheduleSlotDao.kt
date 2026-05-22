@@ -15,6 +15,16 @@ interface ScheduleSlotDao {
     fun getSlotsForSubject(subjectId: String): Flow<List<ScheduleSlotEntity>>
 
     @Query("""
+        SELECT schedule_slots.* FROM schedule_slots 
+        INNER JOIN subjects ON schedule_slots.subjectId = subjects.id 
+        WHERE schedule_slots.dayOfWeek = :dayOfWeek AND subjects.termId = :activeTermId
+    """)
+    fun getSlotsForDayInTerm(
+        dayOfWeek: Int, 
+        activeTermId: String
+    ): Flow<List<ScheduleSlotEntity>>
+
+    @Query("""
         SELECT * FROM schedule_slots 
         INNER JOIN subjects ON schedule_slots.subjectId = subjects.id 
         WHERE schedule_slots.dayOfWeek = :dayOfWeek AND subjects.termId = :activeTermId

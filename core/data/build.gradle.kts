@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.hilt)
     alias(libs.plugins.room)
     alias(libs.plugins.ksp)
 }
@@ -40,9 +41,14 @@ android {
 
 dependencies {
     implementation(project(":core:domain"))
-    
+
     implementation(libs.androidx.core.ktx)
+    implementation(libs.kotlinx.datetime)
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
+
+    // Hilt — needed to host DatabaseModule, RepositoryModule, UseCaseModule
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
 }

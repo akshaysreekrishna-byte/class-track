@@ -41,10 +41,25 @@ android {
 
 dependencies {
     implementation(project(":core:domain"))
+
     implementation(libs.androidx.core.ktx)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation("androidx.compose.material:material-icons-extended")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.0")
+    implementation(libs.hilt.navigation.compose)
+
+    // Lifecycle / ViewModel
+    implementation(libs.lifecycle.viewmodel.compose)
+
+    // Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
+
+    // Hilt Navigation Compose (for hiltViewModel())
+    implementation(libs.hilt.navigation.compose)
+
+    debugImplementation(libs.androidx.ui.tooling)
 }
