@@ -63,10 +63,10 @@ The app follows strict **Clean Architecture** principles as defined in [AGENTS.m
 - [x] Build reusable UI components (Attendance cards, status chips).
 
 ### Phase 5: Analytics Dashboard & Visuals
-- [ ] Create "Bunk Safety" Dashboard with dynamic KPI cards.
-- [ ] Implement Semantic Timetable Grid (4-color status tracking).
-- [ ] Build History/Calendar View for long-term attendance auditing.
-- [ ] Integrate interactive charts for subject-wise performance.
+- [x] Create "Bunk Safety" Dashboard with dynamic KPI cards.
+- [x] Implement Semantic Timetable Grid (4-color status tracking).
+- [x] Build History/Calendar View for long-term attendance auditing.
+- [x] Integrate interactive charts for subject-wise performance.
 
 ### Phase 6: Refinement & Privacy Features
 - [ ] Implement local backup/restore (JSON/CSV export).
