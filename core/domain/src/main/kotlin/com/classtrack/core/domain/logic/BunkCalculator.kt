@@ -29,6 +29,7 @@ object BunkCalculator {
     }
 
     fun calculateRequiredClasses(presentCount: Int, totalCount: Int, targetPercentage: Float): Int {
+        if (totalCount == 0) return 0
         val currentPercentage = calculatePercentage(presentCount, totalCount)
         if (currentPercentage >= targetPercentage) return 0
 

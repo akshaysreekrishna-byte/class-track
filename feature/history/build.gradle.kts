@@ -41,11 +41,18 @@ android {
 
 dependencies {
     implementation(project(":core:domain"))
+    implementation(project(":core:ui"))
     implementation(libs.androidx.core.ktx)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.0")
+    implementation(libs.lifecycle.viewmodel.compose)
+    implementation("androidx.compose.material:material-icons-extended")
+    implementation(libs.kotlinx.datetime)
     implementation(libs.hilt.android)
+    implementation(libs.hilt.navigation.compose)
     ksp(libs.hilt.compiler)
+    debugImplementation(libs.androidx.ui.tooling)
 }

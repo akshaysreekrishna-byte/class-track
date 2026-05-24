@@ -1,17 +1,24 @@
 package com.classtrack.feature.subjects.ui.state
 
 import com.classtrack.core.domain.model.SubjectType
+import com.classtrack.core.ui.components.AttendanceHealthStatus
 
 /** Accent color cycling for subject cards — Primary → Secondary → Tertiary. */
 enum class SubjectAccentColor { PRIMARY, SECONDARY, TERTIARY }
 
-/** Flattened UI representation of a Subject for the list screen. */
+/** Flattened UI representation of a Subject with live attendance analytics. */
 data class SubjectUiItem(
     val id: String,
     val name: String,
     val type: SubjectType,
     val minAttendancePercentage: Float,
     val accentColor: SubjectAccentColor,
+    // Analytics fields — null when no classes have been recorded yet
+    val attendancePercentage: Float? = null,
+    val healthStatus: AttendanceHealthStatus? = null,
+    val actionLabel: String? = null,
+    val presentCount: Int = 0,
+    val totalCount: Int = 0,
 )
 
 /** Overall screen state. */
