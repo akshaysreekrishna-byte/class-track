@@ -29,6 +29,7 @@ class ClassTrackApplication : Application(), Configuration.Provider {
 
     override fun onCreate() {
         super.onCreate()
+        CrashReporter.initialize(this)
         notificationHelper.createChannel()
         WorkManagerScheduler.schedule(this)
     }

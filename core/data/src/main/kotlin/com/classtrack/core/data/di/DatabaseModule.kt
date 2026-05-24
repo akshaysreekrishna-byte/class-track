@@ -30,7 +30,8 @@ object DatabaseModule {
             context,
             ClassTrackDatabase::class.java,
             "class_track.db",
-        ).build()
+        ).fallbackToDestructiveMigration()
+         .build()
 
     @Provides
     @Singleton

@@ -23,6 +23,7 @@ rootProject.name = "class-track"
 include(":app")
 include(":core:domain")
 include(":core:data")
+include(":core:ui")
 include(":feature:dashboard")
 include(":feature:subjects")
 include(":feature:history")

@@ -5,6 +5,8 @@ import com.classtrack.core.domain.repository.AttendanceRepository
 import com.classtrack.core.domain.repository.ScheduleSlotRepository
 import com.classtrack.core.domain.repository.SubjectRepository
 import com.classtrack.core.domain.usecase.CheckGeofenceUseCase
+import com.classtrack.core.domain.usecase.GetAttendanceRecordsForMonthUseCase
+import com.classtrack.core.domain.usecase.GetDashboardSummaryUseCase
 import com.classtrack.core.domain.usecase.GetGeofenceScheduleForDayUseCase
 import com.classtrack.core.domain.usecase.GetSubjectAttendanceStatusUseCase
 import com.classtrack.core.domain.usecase.GetSubjectsForCurrentTermUseCase
@@ -52,4 +54,22 @@ object UseCaseModule {
         scheduleSlotRepository: ScheduleSlotRepository,
     ): GetGeofenceScheduleForDayUseCase =
         GetGeofenceScheduleForDayUseCase(scheduleSlotRepository)
+
+    @Provides
+    fun provideGetDashboardSummaryUseCase(
+        getSubjectsForCurrentTermUseCase: GetSubjectsForCurrentTermUseCase,
+        subjectRepository: SubjectRepository,
+        attendanceRepository: AttendanceRepository,
+    ): GetDashboardSummaryUseCase =
+        GetDashboardSummaryUseCase(
+            getSubjectsForCurrentTermUseCase,
+            subjectRepository,
+            attendanceRepository,
+        )
+
+    @Provides
+    fun provideGetAttendanceRecordsForMonthUseCase(
+        attendanceRepository: AttendanceRepository,
+    ): GetAttendanceRecordsForMonthUseCase =
+        GetAttendanceRecordsForMonthUseCase(attendanceRepository)
 }

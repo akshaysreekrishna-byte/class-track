@@ -21,21 +21,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.classtrack.core.domain.model.SubjectType
+import com.classtrack.core.ui.components.AttendanceStatusChip
+import com.classtrack.core.ui.theme.Primary
+import com.classtrack.core.ui.theme.Secondary
+import com.classtrack.core.ui.theme.Tertiary
 import com.classtrack.feature.subjects.ui.state.SubjectAccentColor
 import com.classtrack.feature.subjects.ui.state.SubjectUiItem
 
-private val Primary = Color(0xFF6750A4)
-private val Secondary = Color(0xFF625B71)
-private val Tertiary = Color(0xFF7D5260)
-private val SurfaceContainerLowest = Color(0xFFFFFFFF)
-
 /**
- * Subject list card matching the Stitch design.
- * Features a bold 4dp left accent bar in the subject's cycled accent color,
- * a type chip, the subject name, and edit/delete action buttons.
+ * Subject list card with a bold left accent bar, type chip, subject name,
+ * and — when attendance data exists — an inline analytics row showing
+ * the current percentage + health status chip + stacked bar breakdown.
  */
 @Composable
 fun SubjectCard(
@@ -47,19 +44,29 @@ fun SubjectCard(
     Card(
         modifier = modifier.fillMaxWidth(),
         shape = MaterialTheme.shapes.large,
-        colors = CardDefaults.cardColors(containerColor = SurfaceContainerLowest),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
+        ),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
     ) {
-        Row(modifier = Modifier.fillMaxWidth()) {
-            AccentBar(color = subject.accentColor.toColor())
-            CardContent(
-                subject = subject,
-                onEditClick = onEditClick,
-                onDeleteClick = onDeleteClick,
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = 12.dp, vertical = 12.dp),
-            )
+        Column {
+            Row(modifier = Modifier.fillMaxWidth()) {
+                AccentBar(color = subject.accentColor.toColor())
+                CardContent(
+                    subject = subject,
+                    onEditClick = onEditClick,
+                    onDeleteClick = onDeleteClick,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 12.dp, vertical = 12.dp),
+                )
+            }
+            if (subject.totalCount > 0) {
+                SubjectAnalyticsBar(
+                    presentCount = subject.presentCount,
+                    totalCount = subject.totalCount,
+                )
+            }
         }
     }
 }
@@ -70,7 +77,7 @@ private fun AccentBar(color: Color) {
         modifier = Modifier
             .width(4.dp)
             .fillMaxHeight()
-            .background(color)
+            .background(color),
     )
 }
 
@@ -85,16 +92,35 @@ private fun CardContent(
         modifier = modifier,
         verticalAlignment = Alignment.Top,
     ) {
-        Column(modifier = Modifier.weight(1f)) {
-            SubjectTypeChip(type = subject.type)
-            Text(
-                text = subject.name,
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onSurface,
+        SubjectInfo(subject = subject, modifier = Modifier.weight(1f))
+        CardActions(onEditClick = onEditClick, onDeleteClick = onDeleteClick)
+    }
+}
+
+@Composable
+private fun SubjectInfo(subject: SubjectUiItem, modifier: Modifier = Modifier) {
+    Column(modifier = modifier) {
+        SubjectTypeChip(type = subject.type)
+        Text(
+            text = subject.name,
+            style = MaterialTheme.typography.titleLarge,
+            color = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.padding(top = 4.dp),
+        )
+        subject.healthStatus?.let { status ->
+            AttendanceStatusChip(
+                status = status,
                 modifier = Modifier.padding(top = 4.dp),
             )
         }
-        CardActions(onEditClick = onEditClick, onDeleteClick = onDeleteClick)
+        subject.attendancePercentage?.let { pct ->
+            Text(
+                text = "${pct.toInt()}%",
+                style = MaterialTheme.typography.headlineMedium,
+                color = subject.healthStatus?.toColor() ?: MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.padding(top = 2.dp),
+            )
+        }
     }
 }
 
@@ -122,28 +148,4 @@ private fun SubjectAccentColor.toColor(): Color = when (this) {
     SubjectAccentColor.PRIMARY -> Primary
     SubjectAccentColor.SECONDARY -> Secondary
     SubjectAccentColor.TERTIARY -> Tertiary
-}
-
-@Preview(showBackground = true, backgroundColor = 0xFFF1ECF7)
-@Composable
-private fun SubjectCardPreview() {
-    MaterialTheme {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(12.dp),
-        ) {
-            SubjectCard(
-                subject = SubjectUiItem("1", "Data Structures", SubjectType.THEORY, 75f, SubjectAccentColor.PRIMARY),
-                onEditClick = {}, onDeleteClick = {},
-            )
-            SubjectCard(
-                subject = SubjectUiItem("2", "OS Lab", SubjectType.LAB, 75f, SubjectAccentColor.SECONDARY),
-                onEditClick = {}, onDeleteClick = {},
-            )
-            SubjectCard(
-                subject = SubjectUiItem("3", "Computer Networks", SubjectType.THEORY, 75f, SubjectAccentColor.TERTIARY),
-                onEditClick = {}, onDeleteClick = {},
-            )
-        }
-    }
 }
