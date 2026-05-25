@@ -15,3 +15,6 @@
 local.properties
 */build/
 **/build/
+.codegraph
+.idea/
+stitch_class-track/

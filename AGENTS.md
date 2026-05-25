@@ -212,3 +212,35 @@ git worktree remove ~/class-track-worktrees/<branch-name>
 ### 8.4 Worktree Naming
 - Name worktrees after their branch: `~/class-track-worktrees/feature-attendance-ui/`, `~/class-track-worktrees/fix-bunk-calculator/`, etc.
 - Branch names follow kebab-case: `<type>-<short-description>` (e.g. `feature-subject-list`, `fix-mapper-null-crash`, `refactor-domain-entities`).
+
+---
+
+## 9. CodeGraph Navigation
+
+All agents must use the CodeGraph skill for structural codebase exploration. Raw filesystem scanning (`grep -r`, `find`) is a last resort, not a first step.
+
+### 9.1 When CodeGraph Is Mandatory
+Use `codegraph_explore` before touching any file in these situations:
+- Any task that spans more than one layer (e.g. adding a Use Case that requires a new DAO and a new screen).
+- Tracing where a Domain interface is implemented in the Data layer, or consumed in the UI layer.
+- Identifying all callers of a Use Case before modifying its signature or return type.
+- Answering structural questions: "What depends on `BunkCalculator`?", "Which ViewModels consume `AttendanceRepository`?", "What mappers exist for `SubjectEntity`?".
+- Before refactoring any class that appears in more than one layer.
+
+### 9.2 Prohibited Without CodeGraph First
+- **Never** run a global `grep` across the workspace to locate a class, function, or symbol without first checking the CodeGraph index.
+- **Never** open and scan files speculatively (opening five files hoping one contains what you need). Use CodeGraph to pinpoint the exact file, then open it.
+
+### 9.3 Required Workflow
+1. **Query first.** Invoke `codegraph_explore` to get the structural map for the relevant module, class, or symbol.
+2. **Narrow scope.** Use the graph result to identify the exact file paths and function names relevant to the task.
+3. **Then read.** Only open files (`cat`, `view`) once their relevance is confirmed by CodeGraph.
+4. **Re-query on changes.** After adding or renaming a class, notify the user if the CodeGraph index needs re-indexing, or trigger the indexing process if available.
+
+### 9.4 When CodeGraph Does Not Apply
+- Single-file edits where the file path is already known (e.g. fixing a typo in a specific Composable).
+- Simple variable renaming scoped entirely within one file.
+- Standalone bash commands unrelated to navigating the codebase.
+
+### 9.5 Rationale
+This codebase enforces strict layer separation (§1.1). Violations — importing a Room entity into Domain, calling a Repository directly from a ViewModel — are easy to introduce when navigating by grep alone. CodeGraph makes the dependency graph explicit and machine-queryable, so structural violations are caught before any file is written.
