@@ -16,9 +16,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.firstOrNull
 import java.time.LocalDate
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
-import java.util.Calendar
+import com.classtrack.core.domain.repository.SubjectRepository
 
 /**
  * Periodic background worker that performs geofence-based auto-attendance.
@@ -39,72 +37,46 @@ import java.util.Calendar
  */
 @HiltWorker
 class GeofenceCheckWorker @AssistedInject constructor(
-    @Assisted appContext: Context,
+    @Assisted context: Context,
     @Assisted workerParams: WorkerParameters,
     private val getGeofenceScheduleForDayUseCase: GetGeofenceScheduleForDayUseCase,
     private val checkGeofenceUseCase: CheckGeofenceUseCase,
     private val markAttendanceUseCase: MarkAttendanceUseCase,
     private val locationProvider: LocationProvider,
-    private val notificationHelper: NotificationHelper
-) : CoroutineWorker(appContext, workerParams) {
+    private val notificationHelper: NotificationHelper,
+    private val subjectRepository: SubjectRepository
+) : CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result {
-        val todayDayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
+        val slotId = inputData.getString("SLOT_ID") ?: return Result.success()
+        val subjectId = inputData.getString("SUBJECT_ID") ?: return Result.success()
         val todayDate = LocalDate.now()
-        val currentTime = LocalTime.now()
-        val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
 
-        val activeSlots = getGeofenceScheduleForDayUseCase(todayDayOfWeek)
-            .firstOrNull()
-            ?: return Result.success()
-
-        val eligibleSlots = activeSlots.filter { (slot, subject) ->
-            subject.geofenceConfig != null && isSlotActive(slot.startTime, slot.endTime, currentTime, timeFormatter)
-        }
-
-        if (eligibleSlots.isEmpty()) return Result.success()
+        val subject = subjectRepository.getSubjectById(subjectId).firstOrNull() ?: return Result.success()
+        val config = subject.geofenceConfig ?: return Result.success()
 
         val locationOutcome = locationProvider.getCurrentLocation()
         if (locationOutcome is Outcome.Error) return Result.success()
 
         val coordinates = (locationOutcome as Outcome.Success).data
+        val isInsideGeofence = checkGeofenceUseCase(coordinates, config)
 
-        eligibleSlots.forEachIndexed { index, (slot, subject) ->
-            val config = subject.geofenceConfig ?: return@forEachIndexed
-            val isInsideGeofence = checkGeofenceUseCase(coordinates, config)
-
-            if (isInsideGeofence) {
-                val record = AttendanceRecord(
-                    id = "${slot.id}_${todayDate}",
-                    subjectId = subject.id,
-                    scheduleSlotId = slot.id,
-                    timestamp = System.currentTimeMillis(),
-                    status = AttendanceStatus.PRESENT,
-                    isAutoMarked = true
-                )
-                markAttendanceUseCase(record)
-                notificationHelper.notifyAutoMarked(
-                    subjectName = subject.name,
-                    notificationId = slot.id.hashCode() + todayDate.hashCode()
-                )
-            }
+        if (isInsideGeofence) {
+            val record = AttendanceRecord(
+                id = "${slotId}_${todayDate}",
+                subjectId = subject.id,
+                scheduleSlotId = slotId,
+                timestamp = System.currentTimeMillis(),
+                status = AttendanceStatus.PRESENT,
+                isAutoMarked = true
+            )
+            markAttendanceUseCase(record)
+            notificationHelper.notifyAutoMarked(
+                subjectName = subject.name,
+                notificationId = slotId.hashCode() + todayDate.hashCode()
+            )
         }
 
         return Result.success()
-    }
-
-    private fun isSlotActive(
-        startTime: String,
-        endTime: String,
-        currentTime: LocalTime,
-        formatter: DateTimeFormatter
-    ): Boolean {
-        return try {
-            val start = LocalTime.parse(startTime, formatter)
-            val end = LocalTime.parse(endTime, formatter)
-            !currentTime.isBefore(start) && !currentTime.isAfter(end)
-        } catch (e: Exception) {
-            false
-        }
     }
 }

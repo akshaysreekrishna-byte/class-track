@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import kotlinx.serialization.Serializable
 
 @Entity(
     tableName = "schedule_slots",
@@ -17,6 +18,7 @@ import androidx.room.PrimaryKey
     ],
     indices = [Index(value = ["subjectId"])]
 )
+@Serializable
 data class ScheduleSlotEntity(
     @PrimaryKey
     val id: String,

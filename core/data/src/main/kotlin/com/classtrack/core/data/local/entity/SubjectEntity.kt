@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import kotlinx.serialization.Serializable
 
 @Entity(
     tableName = "subjects",
@@ -18,6 +19,7 @@ import androidx.room.PrimaryKey
     ],
     indices = [Index(value = ["termId"])]
 )
+@Serializable
 data class SubjectEntity(
     @PrimaryKey
     val id: String,
@@ -29,6 +31,7 @@ data class SubjectEntity(
     val geofenceConfig: GeofenceConfigEntity? = null
 )
 
+@Serializable
 data class GeofenceConfigEntity(
     val latitude: Double?,
     val longitude: Double?,

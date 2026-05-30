@@ -32,4 +32,5 @@ abstract class ClassTrackDatabase : RoomDatabase() {
     abstract val scheduleSlotDao: ScheduleSlotDao
     abstract val attendanceRecordDao: AttendanceRecordDao
     abstract val holidayDao: HolidayDao
+    abstract val backupDao: com.classtrack.core.data.local.backup.BackupDao
 }

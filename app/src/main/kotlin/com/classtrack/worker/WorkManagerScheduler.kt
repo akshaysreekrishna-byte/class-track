@@ -1,7 +1,10 @@
 package com.classtrack.worker
 
 import android.content.Context
+import androidx.work.Data
 import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import java.util.concurrent.TimeUnit
@@ -13,25 +16,43 @@ import java.util.concurrent.TimeUnit
  */
 object WorkManagerScheduler {
 
-    private const val WORK_NAME = "geofence_check"
-    private const val REPEAT_INTERVAL_MINUTES = 15L
+    private const val SYNC_WORK_NAME = "schedule_sync_work"
 
-    fun schedule(context: Context) {
-        val request = PeriodicWorkRequestBuilder<GeofenceCheckWorker>(
-            REPEAT_INTERVAL_MINUTES,
-            TimeUnit.MINUTES
+    fun scheduleSync(context: Context) {
+        // Run once every 12 hours
+        val request = PeriodicWorkRequestBuilder<ScheduleSyncWorker>(
+            12, TimeUnit.HOURS
         )
-            .addTag(WORK_NAME)
+            .addTag(SYNC_WORK_NAME)
             .build()
 
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(
-            WORK_NAME,
+            SYNC_WORK_NAME,
             ExistingPeriodicWorkPolicy.KEEP,
             request
         )
     }
 
-    fun cancel(context: Context) {
-        WorkManager.getInstance(context).cancelUniqueWork(WORK_NAME)
+    fun scheduleOneTimeGeofenceCheck(context: Context, slotId: String, subjectId: String, delayMinutes: Long) {
+        val inputData = Data.Builder()
+            .putString("SLOT_ID", slotId)
+            .putString("SUBJECT_ID", subjectId)
+            .build()
+
+        val request = OneTimeWorkRequestBuilder<GeofenceCheckWorker>()
+            .setInputData(inputData)
+            .setInitialDelay(delayMinutes, TimeUnit.MINUTES)
+            .addTag("geofence_check_$slotId")
+            .build()
+
+        WorkManager.getInstance(context).enqueueUniqueWork(
+            "geofence_check_${slotId}_${java.time.LocalDate.now()}",
+            ExistingWorkPolicy.REPLACE,
+            request
+        )
+    }
+
+    fun cancelAll(context: Context) {
+        WorkManager.getInstance(context).cancelAllWork()
     }
 }

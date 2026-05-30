@@ -3,6 +3,7 @@ package com.classtrack.core.data.local.entity
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import kotlinx.serialization.Serializable
 
 @Entity(
     tableName = "holidays",
@@ -15,6 +16,7 @@ import androidx.room.PrimaryKey
         )
     ]
 )
+@Serializable
 data class HolidayEntity(
     @PrimaryKey val id: String,
     val termId: String,

@@ -31,6 +31,7 @@ class ClassTrackApplication : Application(), Configuration.Provider {
         super.onCreate()
         CrashReporter.initialize(this)
         notificationHelper.createChannel()
-        WorkManagerScheduler.schedule(this)
+        // Start background scheduling
+        WorkManagerScheduler.scheduleSync(this)
     }
 }

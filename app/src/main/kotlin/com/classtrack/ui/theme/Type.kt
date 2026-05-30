@@ -16,11 +16,8 @@ val LexendFontFamily = FontFamily(
     Font(R.font.lexend_semibold, FontWeight.SemiBold),
 )
 
-val InterFontFamily = FontFamily(
-    Font(R.font.inter_variable, FontWeight.Normal),
-    Font(R.font.inter_variable, FontWeight.Medium),
-    Font(R.font.inter_variable, FontWeight.SemiBold),
-)
+// Fallback to default system font because inter_variable.ttf is currently corrupted
+val InterFontFamily = FontFamily.Default
 
 // ── Material 3 Typography Scale ───────────────────────────────────────────
 // Mapped from Stitch design tokens in predictive_academic_pulse/DESIGN.md

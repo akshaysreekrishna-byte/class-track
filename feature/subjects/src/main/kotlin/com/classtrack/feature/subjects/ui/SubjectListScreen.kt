@@ -201,7 +201,7 @@ private fun SubjectList(
             SubjectCard(
                 subject = subject,
                 onEditClick = { onEditClick(subject) },
-                onDeleteClick = { onDeleteClick(subject.id, subject.name) },
+                onDeleteClick = { onDeleteClick(subject.id, subject.name) }
             )
         }
     }

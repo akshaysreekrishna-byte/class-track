@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.animation.animateContentSize
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -38,7 +39,8 @@ fun SubjectSummaryCard(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .semantics { contentDescription = description },
+            .semantics { contentDescription = description }
+            .animateContentSize(animationSpec = androidx.compose.animation.core.spring()),
         shape = MaterialTheme.shapes.large,
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
